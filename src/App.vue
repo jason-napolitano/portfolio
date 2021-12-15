@@ -24,13 +24,21 @@
 </template>
 
 <script setup>
-/* imports */
+/* --------------------------------------------------------------------------
+ * Component imports
+ * ----------------------------------------------------------------------- */
 import ScrollTop from 'primevue/scrolltop'
 import AppNavbar from './layout/Navbar'
 import AppFooter from './layout/Footer'
+
+/* --------------------------------------------------------------------------
+ * Library imports
+ * ----------------------------------------------------------------------- */
 import { onMounted } from 'vue'
 
-/* component mounting */
+/* --------------------------------------------------------------------------
+ * Component mounting
+ * ----------------------------------------------------------------------- */
 onMounted(() => {
   // Disable context menu
   window.addEventListener(`contextmenu`, (e) => e.preventDefault())
