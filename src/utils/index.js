@@ -62,7 +62,6 @@ export const toTitleCase = (phrase) =>
  * Remove an extension from a filename (string)
  *
  * @param file {string}
- *
  * @returns {string}
  */
 export const removeExtension = (file) => file.slice(0, -4)
@@ -72,7 +71,6 @@ export const removeExtension = (file) => file.slice(0, -4)
  * comma-delineated string value
  *
  * @param number {number} The value to parse
- *
  * @returns {string}
  */
 export const thousandsSeparator = (number) => {
