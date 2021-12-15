@@ -1,0 +1,23 @@
+/* ----------------------------------------------------------------------------
+ * raleway */
+@font-face {
+  font-family: 'Raleway';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../fonts/Raleway-Regular.ttf') format('truetype');
+}
+.raleway {
+  font-family: 'Raleway', sans-serif;
+}
+
+/* ----------------------------------------------------------------------------
+ * rock-salt */
+@font-face {
+  font-family: 'Rock Salt';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../fonts/RockSalt-Regular.ttf') format('truetype');
+}
+.rock-salt {
+  font-family: 'Rock Salt', cursive;
+}
