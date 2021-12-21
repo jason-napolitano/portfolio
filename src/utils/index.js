@@ -62,6 +62,7 @@ export const toTitleCase = (phrase) =>
  * Remove an extension from a filename (string)
  *
  * @param file {string}
+ *
  * @returns {string}
  */
 export const removeExtension = (file) => file.slice(0, -4)
@@ -71,10 +72,20 @@ export const removeExtension = (file) => file.slice(0, -4)
  * comma-delineated string value
  *
  * @param number {number} The value to parse
+ *
  * @returns {string}
  */
 export const thousandsSeparator = (number) => {
   const num_parts = number.toString().split('.')
   num_parts[0] = num_parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',')
   return num_parts.join('.')
+}
+
+/**
+ * A wrapper for window.scrollTo()
+ *
+ * @returns {void}
+ */
+export const scrollTo = (x = 0, y = 0) => {
+  window.scrollTo(x, y)
 }

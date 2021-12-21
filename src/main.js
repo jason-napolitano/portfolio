@@ -39,7 +39,7 @@ router.beforeEach(function (to, from, next) {
 })
 
 /* -----------------------------------------------------------------------------
- * helpers and utility functions
+ * element-plus library
  * -------------------------------------------------------------------------- */
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
@@ -50,7 +50,6 @@ app.use(ElementPlus)
  * -------------------------------------------------------------------------- */
 import ConfirmationService from 'primevue/confirmationservice'
 import ToastService from 'primevue/toastservice'
-import StyleClass from 'primevue/styleclass'
 import PrimeVue from 'primevue/config'
 import Tooltip from 'primevue/tooltip'
 
@@ -71,7 +70,6 @@ app.use(ConfirmationService)
 app.use(ToastService)
 
 // primevue global directives
-app.directive('styleclass', StyleClass)
 app.directive('tooltip', Tooltip)
 
 /* -----------------------------------------------------------------------------

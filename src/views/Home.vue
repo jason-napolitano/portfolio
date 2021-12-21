@@ -1,8 +1,8 @@
 <template>
-  <!-- Responsive grid system -->
+  <!-- Main grid -->
   <main class="grid">
     <!-- Always display the Filter System -->
-    <section class="col-12 mt-3">
+    <section class="col-12">
       <!-- Affix the toolbar to the top of the window upon scroll -->
       <ElAffix :offset="-5">
         <!-- Filter toolbar -->
@@ -10,63 +10,21 @@
           <!-- Toolbar's left slot  -->
           <template #left>
             <!-- Folder name dropdown -->
-            <div v-tooltip.hover.right="'Gallery'">
+            <div v-tooltip.hover.right="'Gallery Selection'">
+              <Button class="p-button-secondary" disabled style="border-radius: .25rem 0 0 .25rem !important;">
+                <Icon icon="buttons:gallery" /><span class='ml-2'>GALLERY</span>
+              </Button>
               <Dropdown
+                style="border-radius: 0 .25rem .25rem 0 !important; width: 10rem"
+                @change="initDropdown"
                 placeholder="Gallery"
                 optionValue="value"
-                @change="getPhotos"
+                :loading="isLoading"
                 optionLabel="name"
                 :options="folders"
                 v-model="folder"
                 class="mr-2"
               />
-            </div>
-          </template>
-          <!-- Toolbar's right slot  -->
-          <template #right>
-            <!-- `Order by` dropdown -- >
-            <div v-tooltip.hover.left="'Order By'">
-              <Dropdown
-                :options="orderByOptions"
-                placeholder="Order By"
-                optionValue="value"
-                @change="getPhotos"
-                optionLabel="name"
-                v-model="orderBy"
-                class="mr-2"
-              />
-            </div>
-            < !-- `Order type` dropdown -- >
-            <div v-tooltip.hover.left="'Order'">
-              <Dropdown
-                :options="orderTypeOptions"
-                placeholder="Order Type"
-                optionValue="value"
-                @change="getPhotos"
-                optionLabel="name"
-                v-model="orderType"
-                class="mr-2"
-              />
-            </div>
-            -->
-            <!-- `Query limit` dropdown -->
-            <div v-tooltip.hover.left="'Limit'">
-              <Dropdown
-                placeholder="Limit"
-                :options="limitOptions"
-                optionValue="value"
-                @change="getPhotos"
-                optionLabel="name"
-                v-model="perPage"
-                class="mr-2"
-              />
-            </div>
-            <!-- `Reset filters` button -->
-            <div v-tooltip.hover.left="'Reset Filters'">
-              <Button @click="resetFilters">
-                <!-- Local refresh icon -->
-                <Icon icon="filters:refresh" width="20" />
-              </Button>
             </div>
           </template>
         </Toolbar>
@@ -107,13 +65,6 @@
 
     <!-- Display if query is not in loading state but there are photos to display -->
     <section class="col-12" v-if="!isLoading && photos.length > 0">
-      <div class="lead text-center py-2">
-        Showing
-        <span class="text-pomegranate">{{ formatCount(photos) }}</span> images
-        from the
-        <span class="text-pomegranate">{{ toTitleCase(folder) }}</span>
-        gallery
-      </div>
       <div class="p-2">
         <!-- INTENTIONALLY LEFT BLANK -->
       </div>
@@ -150,7 +101,7 @@
         <!-- Foreach through the images ... -->
         <div
           v-for="(image, index) of photos"
-          class="sm:col-12 md:col-4 lg:col-4"
+          class="xs:col-12 sm:col-12 md:col-4 lg:col-4"
           :key="index"
         >
           <!-- Display the individual image ... -->
@@ -187,6 +138,15 @@
         </div>
       </div>
     </section>
+    <section v-if="!isLoading" class="col-12 text-center">
+      <Button
+        :disabled="perPage >= totalCount"
+        class="p-button-secondary"
+        @click="loadMore"
+      >
+        <Icon icon="filters:load-more" /> <span class="ml-1">Load More</span>
+      </Button>
+    </section>
 
     <!-- Toast Container -->
     <Toast />
@@ -207,15 +167,10 @@ import Toast from 'primevue/toast'
 /* --------------------------------------------------------------------------
  * Library imports
  * ----------------------------------------------------------------------- */
-import { useToast } from 'primevue/usetoast'
+import { removeExtension, scrollTo } from '../utils'
 import { supabase } from '../utils/supabase'
+import { useToast } from 'primevue/usetoast'
 import { ref, onBeforeMount } from 'vue'
-import {
-  thousandsSeparator,
-  removeExtension,
-  toTitleCase,
-  count,
-} from '../utils'
 
 /* --------------------------------------------------------------------------
  * General component references
@@ -267,65 +222,33 @@ const folder = ref('nature')
 // Dropdown options
 // TODO - Configure dynamically from supabase
 const folders = ref([
-  { name: 'Architecture', value: 'architecture' },
-  { name: 'Vehicles', value: 'vehicles' },
-  { name: 'Animals', value: 'animals' },
-  { name: 'People', value: 'people' },
-  { name: 'Nature', value: 'nature' },
-  { name: 'Macro', value: 'macro' },
-  { name: 'Misc', value: 'misc' },
+  { name: 'Architecture & Vintage', value: 'architecture' },
+  { name: 'Vehicles & Automobiles', value: 'vehicles' },
+  { name: 'Animals & Livestock', value: 'animals' },
+  { name: 'Nature & Outdoors', value: 'nature' },
+  { name: 'Macro Style Photos', value: 'macro' },
+  { name: 'Miscellaneous', value: 'misc' },
 ])
 
 /* --------------------------------------------------------------------------
  * Query ordering
  * ----------------------------------------------------------------------- */
 
-// Initial query offset
+// Total of all photos in the selected
+// folder
+const totalCount = ref(0)
+
+// Set initial offset to `0`
 const offset = ref(0)
 
-// Order by `created_at`
+// Set initial per page value to `6`
+const perPage = ref(6)
+
+// Order by `name`
 const orderBy = ref('name')
 
-// in `ASC` order
+// In `ASC` order
 const orderType = ref('asc')
-
-/* Dropdown options
-const orderByOptions = ref([
-  { name: 'Last Accessed', value: 'last_accessed_at' },
-  { name: 'Created At', value: 'created_at' },
-  { name: 'Image Name', value: 'name' },
-])
-
-// Dropdown options
-const orderTypeOptions = ref([
-  { name: 'DESC', value: 'desc' },
-  { name: 'ASC', value: 'asc' },
-])
-*/
-
-/* --------------------------------------------------------------------------
- * Query limiting
- * ----------------------------------------------------------------------- */
-
-// Set initial per page value to `9`
-const perPage = ref(9)
-
-// Dropdown options
-const limitOptions = ref([
-  { name: '6', value: 6 },
-  { name: '9', value: 9 },
-  { name: '12', value: 12 },
-  { name: '24', value: 24 },
-  { name: '36', value: 36 },
-  { name: '48', value: 48 },
-  { name: '60', value: 60 },
-  { name: '72', value: 72 },
-  { name: '96', value: 96 },
-  { name: '128', value: 128 },
-  { name: '256', value: 256 },
-  { name: '512', value: 512 },
-  { name: '1024', value: 1024 },
-])
 
 /* --------------------------------------------------------------------------
  * Component methods
@@ -362,23 +285,12 @@ const parseFileUrl = (photo) =>
 const parseFilename = (photo) => removeExtension(photo.name)
 
 /**
- * Show a formatted count
- *
- * @param data
- *
- * @return {string}
- */
-const formatCount = (data) => thousandsSeparator(count(data))
-
-/**
- * Refresh all filters
+ * Initialize upon dropdown change
  *
  * @returns {void}
  */
-const resetFilters = () => {
-  perPage.value = 9
-  orderBy.value = 'name'
-  orderType.value = 'asc'
+const initDropdown = () => {
+  perPage.value = 6
   getPhotos()
 }
 
@@ -420,6 +332,11 @@ const getPhotos = async () => {
     .then(() => {
       isLoading.value = false
     })
+    // Get the total count for all photos
+    // in the folder
+    .then(() => {
+      getTotalCount()
+    })
     // Catch any errors that may appear
     .catch((error) => {
       // Display a toast with the error message
@@ -430,6 +347,40 @@ const getPhotos = async () => {
         life: 5500,
       })
     })
+}
+
+/**
+ * Get the total count value of all photos
+ * within the selected folder
+ *
+ * @returns {Promise<void>}
+ */
+const getTotalCount = async () => {
+  // Let's try to retrieve all media
+  await supabase.storage
+    // Grab the bucket name from our
+    // reactive value
+    .from(bucket.value)
+    // List all photos in the folder that is
+    // determined by the dropdown option
+    .list(folder.value)
+    .then((response) => {
+      totalCount.value = response.data.length
+    })
+}
+
+/**
+ * Load more photos and move 'up' within the
+ * viewport
+ *
+ * @returns {void}
+ */
+const loadMore = () => {
+  perPage.value = perPage.value + 3
+  getPhotos().then(() => {
+    const y = Math.round(window.scrollY - 50)
+    scrollTo(0, y)
+  })
 }
 
 /* --------------------------------------------------------------------------
@@ -448,7 +399,7 @@ onBeforeMount(() => {
 <style scoped lang="scss">
 // When an image is in fullscreen mode
 .fs-image {
-  // Calculate the max height and width of the image
+  // Calculate the max-height and max-width of the image
   max-height: calc(90vh - 50px) !important;
   max-width: calc(90vw - 50px) !important;
 }

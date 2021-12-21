@@ -28,9 +28,16 @@
 </template>
 
 <script setup>
+/* --------------------------------------------------------------------------
+ * Library imports
+ * ----------------------------------------------------------------------- */
 import { defineProps } from 'vue'
 
+/* --------------------------------------------------------------------------
+ * Component Props
+ * ----------------------------------------------------------------------- */
 defineProps({
+  // Which image do we want to use?
   image: {
     type: String,
     default: 'wheel',
@@ -38,27 +45,36 @@ defineProps({
     validator: (value) =>
       ['squares', 'pie', 'wheel', 'bars', 'pulse'].includes(value),
   },
+  // How do we want to align the
+  // message body text?
   align: {
     type: String,
     default: 'center',
     required: false,
-    validator: (value) => ['center', 'left', 'right', 'justify'].includes(value)
+    validator: (value) =>
+      ['center', 'left', 'right', 'justify'].includes(value),
   },
+  // Do we want to show the loading
+  // image?
   showSvg: {
     type: Boolean,
     default: true,
   },
+  // Do we want the loading icon on
+  // top or on bottom of the text?
   svgPosition: {
     type: String,
     default: 'top',
     required: false,
     validator: (value) => ['top', 'bottom'].includes(value),
   },
+  // Width of loading image
   width: {
     type: [Number, String],
     default: 80,
     required: false,
   },
+  // Height of loading image
   height: {
     type: [Number, String],
     default: 80,

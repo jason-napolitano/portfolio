@@ -35,29 +35,50 @@
   >
     <div class="p-field my-4 p-col-12">
       <label for="fullname">Full Name</label>
-      <InputText name="name" required id="fullname" type="text" />
+      <InputText
+        v-model="name"
+        id="fullname"
+        type="text"
+        name="name"
+        required
+      />
     </div>
     <div class="p-field my-4 p-col-12">
       <label for="email">Email</label>
-      <InputText name="email" required id="email" type="email" />
+      <InputText
+        v-model="email"
+        type="email"
+        name="email"
+        id="email"
+        required
+      />
     </div>
     <div class="p-field my-4 p-col-12">
       <label for="phone">Phone Number</label>
       <InputMask
+        placeholder="(999) 999-9999"
+        mask="(999) 999-9999"
+        inputId="phone"
+        v-model="phone"
         name="phone"
         required
-        inputId="phone"
-        mask="(999) 999-9999"
-        v-model="phone"
-        placeholder="(999) 999-9999"
       />
     </div>
     <div class="p-field my-4 p-col-12">
-      <label for="city">Project Description</label>
-      <Textarea name="message" v-model="description" style="height: 250px" />
+      <label for="city">Inquiry Description</label>
+      <Textarea
+        v-model="description"
+        style="height: 250px"
+        name="message"
+        required
+      />
     </div>
     <div class="p-field my-4 p-col-12">
-      <input class="p-button p-button-info" type="submit" value="Send" />
+      <input
+        class="p-button p-button-info"
+        value="Send your message"
+        type="submit"
+      />
     </div>
   </form>
 </template>
@@ -74,8 +95,8 @@ import Message from 'primevue/message'
 /* --------------------------------------------------------------------------
  * Library imports
  * ----------------------------------------------------------------------- */
+import { env, scrollTo } from '../utils'
 import emailjs from 'emailjs-com'
-import { env } from '../utils'
 import { ref } from 'vue'
 
 /* --------------------------------------------------------------------------
@@ -104,11 +125,18 @@ const description = ref(null)
 // Phone number field
 const phone = ref(null)
 
+// Email field
+const email = ref(null)
+
+// Name field
+const name = ref(null)
+
 // Contact form reference
 const form = ref(null)
 
-// Timeout timer for errorMessage and successMessage
-const timer = 12500
+// Timeout timer for errorMessage and
+// successMessage
+const timer = 7500
 
 /* --------------------------------------------------------------------------
  * Component methods
@@ -133,13 +161,28 @@ const sendEmail = () => {
     .then(() => {
       // Set isSuccess to true
       isSuccess.value = true
-      // Set the successMessage value
+    })
+    // Reset form fields
+    .then(() => {
+      description.value = ''
+      phone.value = ''
+      email.value = ''
+      name.value = ''
+    })
+    // And scroll to the top of the viewport
+    .then(() => {
+      scrollTo()
+    })
+    // Set the successMessage value
+    .then(() => {
       successMessage.value = `
           Your email was sent successfully. Please give me time to review your
           inquiry and I will contact you as soon as I am able to do so. I thank you
           for your patience.
         `
-      // Reset the isSuccess message
+    })
+    // Reset the isSuccess message
+    .then(() => {
       setTimeout(() => {
         isSuccess.value = false
       }, timer)
@@ -148,6 +191,8 @@ const sendEmail = () => {
     .catch((error) => {
       // Set isError to true
       isError.value = true
+      // Scroll to the top of the viewport
+      scrollTo()
       // Set the errorMessage value
       errorMessage.value =
         error.message ??

@@ -1,18 +1,18 @@
 <template>
   <main ref="container" class="container">
-    <header class="p-grid">
+    <header class="grid my-1">
       <div class="col-12">
         <AppNavbar />
       </div>
     </header>
     <section
-      class="p-grid mx-2 border-round-bottom border-round-top bg-white shadow-1"
+      class="border-round-bottom border-round-top bg-white shadow-1"
     >
-      <div class="col-12 px-4 py-1">
+      <div class="p-3">
         <router-view />
       </div>
     </section>
-    <footer class="p-grid">
+    <footer class="grid">
       <div class="col-12">
         <AppFooter />
       </div>
@@ -46,21 +46,3 @@ onMounted(() => {
   window.ondragstart = () => false
 })
 </script>
-
-<style scoped lang="scss">
-::v-deep(.custom-scrolltop) {
-  width: 2rem;
-  height: 2rem;
-  border-radius: 4px;
-  background-color: var(--primary-color);
-
-  &:hover {
-    background-color: var(--primary-color);
-  }
-
-  .p-scrolltop-icon {
-    font-size: 1rem;
-    color: var(--primary-color-text);
-  }
-}
-</style>

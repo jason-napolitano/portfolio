@@ -41,14 +41,14 @@
       </div>
     </div>
   </div>
-  <!-- div class="p-grid text-center">
+  <div class="p-grid text-center">
     <div class="col-12">
       <Divider />
       <router-link class="no-underline" :to="{ name: 'join-view' }"
         >Don't have an account? Create one!</router-link
       >
     </div>
-  </div -->
+  </div>
 </template>
 
 <script setup>
@@ -56,8 +56,8 @@
  * Component imports
  * ----------------------------------------------------------------------- */
 import InputText from 'primevue/inputtext'
-// import Divider from 'primevue/divider'
 import Password from 'primevue/password'
+import Divider from 'primevue/divider'
 import Message from 'primevue/message'
 import Button from 'primevue/button'
 
@@ -72,7 +72,7 @@ import { ref, computed } from 'vue'
  * General component references
  * ----------------------------------------------------------------------- */
 
-// vue router and vuex instances
+// vue router instances
 const router = useRouter()
 
 /* --------------------------------------------------------------------------

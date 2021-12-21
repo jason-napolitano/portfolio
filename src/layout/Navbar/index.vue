@@ -51,6 +51,7 @@ const items = ref([
     to: { name: 'license-view' },
   },
   {
+    label: 'Follow Me',
     icon: 'pi pi-pw pi-instagram',
     command: () => {
       openInstagramPage()

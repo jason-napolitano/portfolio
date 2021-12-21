@@ -111,9 +111,7 @@ const errorMsg = ref(null)
 const infoMessage = computed(() => {
   return errorMsg.value
     ? errorMsg.value
-    : `
-    Enter a valid email and password in order to create an account.
-  `
+    : `Enter a valid email and password in order to create an account.`
 })
 
 /* --------------------------------------------------------------------------
