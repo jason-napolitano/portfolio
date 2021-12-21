@@ -5,29 +5,40 @@
     <section class="col-12">
       <!-- Affix the toolbar to the top of the window upon scroll -->
       <ElAffix :offset="-5">
-        <!-- Filter toolbar -->
-        <Toolbar>
-          <!-- Toolbar's left slot  -->
-          <template #left>
-            <!-- Folder name dropdown -->
-            <div v-tooltip.hover.right="'Gallery Selection'">
-              <Button class="p-button-secondary" disabled style="border-radius: .25rem 0 0 .25rem !important;">
-                <Icon icon="buttons:gallery" /><span class='ml-2'>GALLERY</span>
-              </Button>
+        <!-- Folder name dropdown -->
+        <div
+          class="bg-gray-100 p-2 border-1 border-gray-300 border-round-bottom border-round-top"
+        >
+          <div class="flex">
+            <div
+              class="flex-none flex align-items-center justify-content-center"
+            >
+              <!-- INTENTIONALLY LEFT BLANK -->
+            </div>
+            <div class="flex-1 flex align-items-center justify-content-center">
               <Dropdown
-                style="border-radius: 0 .25rem .25rem 0 !important; width: 10rem"
+                v-tooltip.hover.right="'Gallery Selection'"
                 @change="initDropdown"
                 placeholder="Gallery"
                 optionValue="value"
                 :loading="isLoading"
+                class="mr-2 w-full"
                 optionLabel="name"
                 :options="folders"
                 v-model="folder"
-                class="mr-2"
               />
             </div>
-          </template>
-        </Toolbar>
+            <div
+              class="flex-none flex align-items-center justify-content-center"
+            >
+              <Button
+                icon="pi pi-info-circle"
+                @click="openHelpModal"
+                class="p-button-info"
+              ></Button>
+            </div>
+          </div>
+        </div>
       </ElAffix>
     </section>
 
@@ -106,6 +117,7 @@
         >
           <!-- Display the individual image ... -->
           <div class="photo-item">
+            <!--
             <div
               class="border-round-top bg-gray-900 text-gray-100 p-2 text-center"
             >
@@ -113,16 +125,17 @@
                 {{ parseFilename(image) }}
               </div>
             </div>
+             -->
             <!-- Using the image component ... -->
             <ElImage
-              class="border-round-bottom cursor-pointer sm:h-20rem md:h-15rem w-full"
+              class="border-round cursor-pointer sm:h-20rem md:h-15rem w-full"
               @click="imageClick(index)"
               :src="parseFileUrl(image)"
               :alt="parseFilename(image)"
               fit="cover"
               lazy
             >
-              <!-- Or use a placeholder when the image is loading -->
+              <!-- Placeholder to be used when the image is loading -->
               <template #placeholder>
                 <div
                   class="flex align-content-center flex-wrap bg-gray-100 h-full"
@@ -138,18 +151,48 @@
         </div>
       </div>
     </section>
+
+    <!-- Load more button -->
     <section v-if="!isLoading" class="col-12 text-center">
       <Button
-        :disabled="perPage >= totalCount"
-        class="p-button-secondary"
+        :class="{ 'p-button-secondary': true, hidden: perPage >= totalCount }"
         @click="loadMore"
       >
-        <Icon icon="filters:load-more" /> <span class="ml-1">Load More</span>
+        <Icon icon="icons:load-more" /> <span class="ml-1">Load More</span>
       </Button>
     </section>
 
     <!-- Toast Container -->
-    <Toast />
+    <section>
+      <Toast />
+    </section>
+
+    <!-- Dialog modal container -->
+    <section>
+      <Dialog
+        v-model:visible="displayDialog"
+        :close-on-escape="true"
+        :closable="false"
+        position="top"
+        :modal="true"
+      >
+        <p class="text-center">
+          If you would like to view a full-screen version of an image, simply
+          click the photo you'd like to view to open the
+          <em class="text-blue-500"><strong>Gallery Mode</strong></em
+          >.
+        </p>
+        <template #footer>
+          <Button
+            icon="pi pi-fw-pi-times"
+            class="p-button-danger w-full"
+            @click="closeHelpModal"
+          >
+            <span class="text-center">Close Window</span>
+          </Button>
+        </template>
+      </Dialog>
+    </section>
   </main>
 </template>
 
@@ -160,16 +203,16 @@
 import Galleria from 'primevue/galleria'
 import Dropdown from 'primevue/dropdown'
 import Loading from '../shared/Loading'
-import Toolbar from 'primevue/toolbar'
+import Dialog from 'primevue/dialog'
 import Button from 'primevue/button'
 import Toast from 'primevue/toast'
 
 /* --------------------------------------------------------------------------
  * Library imports
  * ----------------------------------------------------------------------- */
-import { removeExtension, scrollTo } from '../utils'
 import { supabase } from '../utils/supabase'
 import { useToast } from 'primevue/usetoast'
+import { removeExtension } from '../utils'
 import { ref, onBeforeMount } from 'vue'
 
 /* --------------------------------------------------------------------------
@@ -178,6 +221,9 @@ import { ref, onBeforeMount } from 'vue'
 
 // Display the gallery component initially?
 const displayGalleria = ref(false)
+
+// Display the dialog modal initially?
+const displayDialog = ref(false)
 
 // The galleries active index
 const activeIndex = ref(0)
@@ -376,11 +422,26 @@ const getTotalCount = async () => {
  * @returns {void}
  */
 const loadMore = () => {
-  perPage.value = perPage.value + 3
-  getPhotos().then(() => {
-    const y = Math.round(window.scrollY - 50)
-    scrollTo(0, y)
-  })
+  perPage.value = perPage.value + 6
+  getPhotos()
+}
+
+/**
+ * Opens the help modal
+ *
+ * @returns {void}
+ */
+const openHelpModal = () => {
+  displayDialog.value = true
+}
+
+/**
+ * Opens the help modal
+ *
+ * @returns {void}
+ */
+const closeHelpModal = () => {
+  displayDialog.value = false
 }
 
 /* --------------------------------------------------------------------------
