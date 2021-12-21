@@ -179,7 +179,7 @@
       >
         <p class="text-center">
           If you would like to view a full-screen version of an image, simply
-          click the photo you'd like to view to open the applications
+          click the photo you'd like to view to open the applications <br>
           <em class="text-blue-500"><strong>Gallery Mode</strong></em> feature.
         </p>
         <template #footer>
