@@ -172,15 +172,15 @@
       <Dialog
         v-model:visible="displayDialog"
         :close-on-escape="true"
+        :style="{ 'max-width': '78vw' }"
         :closable="false"
         position="top"
         :modal="true"
       >
         <p class="text-center">
           If you would like to view a full-screen version of an image, simply
-          click the photo you'd like to view to open the
-          <em class="text-blue-500"><strong>Gallery Mode</strong></em
-          >.
+          click the photo you'd like to view to open the applications
+          <em class="text-blue-500"><strong>Gallery Mode</strong></em> feature.
         </p>
         <template #footer>
           <Button
