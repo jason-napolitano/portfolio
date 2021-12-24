@@ -14,7 +14,7 @@ import './utils/pwa/registerServiceWorker'
 /* -----------------------------------------------------------------------------
  * helpers and utility functions
  * -------------------------------------------------------------------------- */
-import * as utils from './utils'
+import { env, removeHyphens, toTitleCase } from './utils'
 
 /* -----------------------------------------------------------------------------
  * state & route management
@@ -26,11 +26,8 @@ app.use(router).use(store)
 // Let's configure some things with the routes
 router.beforeEach(function (to, from, next) {
   // First, we set each routes meta title to attempt better SEO
-  document.title = `${utils.env('META_TITLE')} - ${
-    to.meta.title ??
-    utils.toTitleCase(utils.removeHyphens(to.name)) ??
-    to.name ??
-    ''
+  document.title = `${env('META_TITLE')} - ${
+    to.meta.title ?? toTitleCase(removeHyphens(to.name)) ?? ''
   }`
   // Then, we scroll to the top of the window on each route call
   window.scrollTo(0, 0)

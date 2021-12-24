@@ -45,25 +45,34 @@
       any time.
     </p>
 
-    <ElDivider>Favorite Quote</ElDivider>
+    <Divider align="center" type="dashed">Favorite Quote</Divider>
 
-    <p class="lead p-text-light text-center">
+    <p class="lead text-concrete text-600 text-center">
       <em>
         "A reader lives a thousand lives before he dies. A man who never reads,
         lives only once"
       </em>
     </p>
     <p class="lead text-center text-sm">
-      <em class="text-marina quote-link">
+      <span class="text-pomegranate quote-link">
         - George R.R. Martin, A Dance with Dragons -
-      </em>
+      </span>
     </p>
   </div>
 </template>
 
 <script setup>
+/* --------------------------------------------------------------------------
+ * Component imports
+ * ----------------------------------------------------------------------- */
+import Divider from 'primevue/divider'
+
+/* --------------------------------------------------------------------------
+ * Component methods
+ * ----------------------------------------------------------------------- */
+
 /**
- * Opens the `favorite quote` link
+ * Opens the instagram link
  *
  * @returns {void}
  */

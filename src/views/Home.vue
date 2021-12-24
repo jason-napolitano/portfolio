@@ -13,8 +13,8 @@
           </div>
           <div class="flex-1 flex align-items-center justify-content-center">
             <Dropdown
-              :optionValue="isLoading ? 'Loading Galleries' : 'value'"
               v-tooltip.hover.right="'Gallery Selection'"
+              :optionValue="isLoading ? null : 'value'"
               placeholder="Loading Gallery Data ..."
               :loading="isLoading"
               @change="getPhotos"
@@ -35,6 +35,13 @@
       </div>
     </section>
 
+    <!-- Display photo counter -->
+    <section class="col-12">
+      <Divider align="center" type="dashed">
+        Showing {{ totalCount }} photos
+      </Divider>
+    </section>
+
     <!-- Display if query is in `loading` state -->
     <section class="col-12" v-if="isLoading">
       <!-- Loading animation / message -->
@@ -49,7 +56,7 @@
       </Loading>
     </section>
 
-    <!-- Display if query is not in loading state but there are not photos to display -->
+    <!-- Display if query is not in loading state but there are no photos to display -->
     <section class="col-12" v-if="!isLoading && photos.length < 1">
       <!-- No media message -->
       <div
@@ -67,16 +74,12 @@
       </div>
     </section>
 
-    <!-- Display if query is not in loading state but there are photos to display -->
+    <!-- Display if query is not in loading state and there are photos to display -->
     <section class="col-12" v-if="!isLoading && photos.length > 0">
-      <div class="p-2">
-        <!-- INTENTIONALLY LEFT BLANK -->
-      </div>
       <!-- Gallery component for fullscreen support -->
       <Galleria
-        :responsiveOptions="responsiveOptions"
         v-model:activeIndex="activeIndex"
-        v-model:visible="displayGalleria"
+        v-model:visible="displayGallery"
         :showItemNavigators="true"
         :showThumbnails="false"
         :fullScreen="true"
@@ -86,16 +89,16 @@
         <!-- Fullscreen image -->
         <template #item="slotProps">
           <img
+            :alt="removeExtension(slotProps.item.name)"
             :src="parseFileUrl(slotProps.item)"
-            :alt="parseFilename(slotProps.item)"
             class="w-auto fs-image"
           />
         </template>
         <!-- Thumbnail image (when applicable)-->
         <template #thumbnail="slotProps">
           <img
+            :alt="removeExtension(slotProps.item.name)"
             :src="parseFileUrl(slotProps.item)"
-            :alt="parseFilename(slotProps.item)"
             style="display: block"
           />
         </template>
@@ -105,7 +108,7 @@
         <!-- Foreach through the images ... -->
         <div
           v-for="(image, index) of photos"
-          class="xs:col-12 sm:col-12 md:col-4 lg:col-4"
+          class="xs:col-12 sm:col-6 md:col-4 lg:col-4"
           :key="index"
         >
           <!-- Display the individual image ... -->
@@ -122,9 +125,9 @@
             <!-- Using the image component ... -->
             <ElImage
               class="border-round cursor-pointer sm:h-20rem md:h-15rem w-full"
+              :alt="removeExtension(image.name)"
               @click="imageClick(index)"
               :src="parseFileUrl(image)"
-              :alt="parseFilename(image)"
               fit="cover"
               lazy
             >
@@ -153,9 +156,9 @@
     <!-- Dialog modal container -->
     <section>
       <Dialog
+        :style="{ 'max-width': '78vw' }"
         v-model:visible="displayDialog"
         :close-on-escape="true"
-        :style="{ 'max-width': '78vw' }"
         :closable="false"
         position="top"
         :modal="true"
@@ -168,9 +171,9 @@
         </p>
         <template #footer>
           <Button
-            icon="pi pi-fw-pi-times"
             class="p-button-danger w-full"
             @click="closeHelpModal"
+            icon="pi pi-fw-pi-times"
           >
             <span class="text-center">Close Window</span>
           </Button>
@@ -187,6 +190,7 @@
 import Galleria from 'primevue/galleria'
 import Dropdown from 'primevue/dropdown'
 import Loading from '../shared/Loading'
+import Divider from 'primevue/divider'
 import Dialog from 'primevue/dialog'
 import Button from 'primevue/button'
 import Toast from 'primevue/toast'
@@ -197,187 +201,48 @@ import Toast from 'primevue/toast'
 import { supabase } from '../utils/supabase'
 import { useToast } from 'primevue/usetoast'
 import { removeExtension } from '../utils'
-import { ref, onBeforeMount } from 'vue'
+import { ref, onMounted } from 'vue'
 
 /* --------------------------------------------------------------------------
- * General component references
+ * Component mounting configuration
+ * ----------------------------------------------------------------------- */
+
+/**
+ * When the component is mounted
+ */
+onMounted(() => {
+  // Get the photos from the API
+  getPhotos()
+})
+
+/* --------------------------------------------------------------------------
+ * Fullscreen gallery configuration
  * ----------------------------------------------------------------------- */
 
 // Display the gallery component initially?
-const displayGalleria = ref(false)
-
-// Display the dialog modal initially?
-const displayDialog = ref(false)
+const displayGallery = ref(false)
 
 // The galleries active index
 const activeIndex = ref(0)
 
-// Is the API still loading its data?
-const isLoading = ref(true)
-
-// Photos array from the API
-const photos = ref([])
-
-// PrimeVue Toast API
-const toast = useToast()
-
-// Gallery breakpoints
-const responsiveOptions = [
-  //  1024px
-  {
-    breakpoint: '1024px',
-    numVisible: 7,
-  },
-  //  768px
-  {
-    breakpoint: '768px',
-    numVisible: 5,
-  },
-  //  560px
-  {
-    breakpoint: '560px',
-    numVisible: 2,
-  },
-]
-
-/* --------------------------------------------------------------------------
- * Supabase bucket/folder configuration
- * ----------------------------------------------------------------------- */
-
-// Default values
-const access = ref('public')
-const bucket = ref('public')
-const folder = ref('nature')
-
-// Dropdown options
-// TODO - Configure dynamically from supabase
-const folders = ref([
-  { name: 'Architecture & Vintage', value: 'architecture' },
-  { name: 'Vehicles & Automobiles', value: 'vehicles' },
-  { name: 'Animals & Livestock', value: 'animals' },
-  { name: 'Nature & Outdoors', value: 'nature' },
-  { name: 'Macro Style Photos', value: 'macro' },
-  { name: 'Miscellaneous', value: 'misc' },
-])
-
-/* --------------------------------------------------------------------------
- * Query ordering
- * ----------------------------------------------------------------------- */
-
-// Total of all photos in the selected
-// folder
-const totalCount = ref(0)
-
-// Order by `name`
-const orderBy = ref('name')
-
-// In `ASC` order
-const orderType = ref('asc')
-
-/* --------------------------------------------------------------------------
- * Component methods
- * ----------------------------------------------------------------------- */
-
 /**
  * Activate when clicking on an image
  *
- * @param index
+ * @param index {number}
  *
  * @returns {void}
  */
 const imageClick = (index) => {
   activeIndex.value = index
-  displayGalleria.value = true
+  displayGallery.value = true
 }
 
-/**
- * Parse the url to the physical photo within its bucket & folder
- *
- * @param photo
- * @returns {string}
- */
-const parseFileUrl = (photo) =>
-  `https://zxrrepxdawawbgelqref.supabase.in/storage/v1/object/${access.value}/${bucket.value}/${folder.value}/${photo.name}`
+/* --------------------------------------------------------------------------
+ * Dialog modal configuration
+ * ----------------------------------------------------------------------- */
 
-/**
- * Parse a filename
- *
- * @param photo
- *
- * @returns {string}
- */
-const parseFilename = (photo) => removeExtension(photo.name)
-
-/**
- * Get the photos from the supabase API
- *
- * @return {Promise<void>}
- */
-const getPhotos = async () => {
-  // Let's try to retrieve all media
-  await supabase.storage
-    // Grab the bucket name from our
-    // reactive value
-    .from(bucket.value)
-    // List all photos in the folder that is
-    // determined by the dropdown option
-    .list(folder.value, {
-      sortBy: {
-        column: orderBy.value,
-        order: orderType.value,
-      },
-    })
-    // Set the isLoading state to true and
-    // return the response data
-    .then((response) => {
-      isLoading.value = true
-      return response.data
-    })
-    // Assign the data to the photos reference
-    // for rendering
-    .then((data) => {
-      photos.value = data
-    })
-    // Set the isLoading state to false
-    .then(() => {
-      isLoading.value = false
-    })
-    // Get the total count for all photos
-    // in the folder
-    .then(() => {
-      getTotalCount()
-    })
-    // Catch any errors that may appear
-    .catch((error) => {
-      // Display a toast with the error message
-      toast.add({
-        severity: 'error',
-        summary: 'Error Message',
-        detail: error,
-        life: 5500,
-      })
-    })
-}
-
-/**
- * Get the total count value of all photos
- * within the selected folder
- *
- * @returns {Promise<void>}
- */
-const getTotalCount = async () => {
-  // Let's try to retrieve all media
-  await supabase.storage
-    // Grab the bucket name from our
-    // reactive value
-    .from(bucket.value)
-    // List all photos in the folder that is
-    // determined by the dropdown option
-    .list(folder.value)
-    .then((response) => {
-      totalCount.value = response.data.length
-    })
-}
+// Display the dialog modal initially?
+const displayDialog = ref(false)
 
 /**
  * Opens the help modal
@@ -398,16 +263,93 @@ const closeHelpModal = () => {
 }
 
 /* --------------------------------------------------------------------------
- * Component mounting
+ * Supabase folder configuration
  * ----------------------------------------------------------------------- */
 
+// Default value
+const folder = ref('nature')
+
+// Dropdown options
+const folders = ref([
+  { name: `Architecture & Vintage`, value: 'architecture' },
+  { name: 'Vehicles & Automobiles', value: 'vehicles' },
+  { name: 'Animals & Livestock', value: 'animals' },
+  { name: 'Nature & Outdoors', value: 'nature' },
+  { name: 'Macro Style Photos', value: 'macro' },
+  { name: 'Miscellaneous', value: 'misc' },
+])
+
 /**
- * Before the component is mounted
+ * Parse the url to the physical file
+ *
+ * @param item
+ * @returns {string}
  */
-onBeforeMount(() => {
-  // Get the photos from the API for rendering
-  getPhotos()
-})
+const parseFileUrl = (item) =>
+  `https://zxrrepxdawawbgelqref.supabase.in/storage/v1/object/public/public/${folder.value}/${item.name}`
+
+/* --------------------------------------------------------------------------
+ * Request/Response configuration
+ * ----------------------------------------------------------------------- */
+
+// Total of all photos in the selected folder
+const totalCount = ref(0)
+
+// Is the API call still loading?
+const isLoading = ref(true)
+
+// Photos array from the API
+const photos = ref([])
+
+/**
+ * Get the photos using the supabase API
+ *
+ * @return {Promise<void>}
+ */
+const getPhotos = async () => {
+  // Let's try to retrieve all media
+  await supabase.storage
+    // Grab from the `public` bucket
+    .from('public')
+    // List all photos in the folder that is
+    // determined by the dropdown option
+    .list(folder.value, {
+      // Sort the results by ...
+      sortBy: {
+        column: 'name',
+        order: 'asc',
+      },
+    })
+    // Assign the response data
+    .then((response) => {
+      photos.value = response.data
+    })
+    // Set the `isLoading` state to true
+    .then(() => {
+      isLoading.value = true
+    })
+    // Assign the total count value
+    .then(() => {
+      totalCount.value = photos.value.length
+    })
+    // Reset the isLoading state to false
+    .then(() => {
+      isLoading.value = false
+    })
+    // Catch any errors that may appear
+    .catch((error) => {
+      // PrimeVue Toast API
+      const toast = useToast()
+
+      // Display the toast with an error message
+      toast.add({
+        severity: 'error',
+        summary: 'Error Message',
+        detail: error,
+        life: 5500,
+      })
+    })
+}
 </script>
 
 <style scoped lang="scss">

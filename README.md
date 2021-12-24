@@ -1,7 +1,9 @@
 # Personal Portfolio
+
 > Source code for [Napolitano's Photos](http://napolitano.photos)
 
 # License
+
 MIT License
 
 Copyright (c) 2021 Jason Napolitano

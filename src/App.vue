@@ -16,7 +16,7 @@
       </div>
     </footer>
     <section>
-      <ScrollTop class="custom-scrolltop" icon="pi pi-arrow-up" />
+      <ScrollTop />
     </section>
   </main>
 </template>
