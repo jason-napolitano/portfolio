@@ -3,43 +3,36 @@
   <main class="grid">
     <!-- Always display the Filter System -->
     <section class="col-12">
-      <!-- Affix the toolbar to the top of the window upon scroll -->
-      <ElAffix :offset="-5">
-        <!-- Folder name dropdown -->
-        <div
-          class="bg-gray-100 p-2 border-1 border-gray-300 border-round-bottom border-round-top"
-        >
-          <div class="flex">
-            <div
-              class="flex-none flex align-items-center justify-content-center"
-            >
-              <!-- INTENTIONALLY LEFT BLANK -->
-            </div>
-            <div class="flex-1 flex align-items-center justify-content-center">
-              <Dropdown
-                v-tooltip.hover.right="'Gallery Selection'"
-                @change="initDropdown"
-                placeholder="Gallery"
-                optionValue="value"
-                :loading="isLoading"
-                class="mr-2 w-full"
-                optionLabel="name"
-                :options="folders"
-                v-model="folder"
-              />
-            </div>
-            <div
-              class="flex-none flex align-items-center justify-content-center"
-            >
-              <Button
-                icon="pi pi-info-circle"
-                @click="openHelpModal"
-                class="p-button-info"
-              ></Button>
-            </div>
+      <!-- Folder name dropdown -->
+      <div
+        class="bg-gray-100 p-2 border-1 border-gray-300 border-round-bottom border-round-top"
+      >
+        <div class="flex">
+          <div class="flex-none flex align-items-center justify-content-center">
+            <!-- INTENTIONALLY LEFT BLANK -->
+          </div>
+          <div class="flex-1 flex align-items-center justify-content-center">
+            <Dropdown
+              :optionValue="isLoading ? 'Loading Galleries' : 'value'"
+              v-tooltip.hover.right="'Gallery Selection'"
+              placeholder="Loading Gallery Data ..."
+              :loading="isLoading"
+              @change="getPhotos"
+              class="mr-2 w-full"
+              optionLabel="name"
+              :options="folders"
+              v-model="folder"
+            />
+          </div>
+          <div class="flex-none flex align-items-center justify-content-center">
+            <Button
+              icon="pi pi-info-circle"
+              @click="openHelpModal"
+              class="p-button-info"
+            ></Button>
           </div>
         </div>
-      </ElAffix>
+      </div>
     </section>
 
     <!-- Display if query is in `loading` state -->
@@ -152,16 +145,6 @@
       </div>
     </section>
 
-    <!-- Load more button -->
-    <section v-if="!isLoading" class="col-12 text-center">
-      <Button
-        :class="{ 'p-button-secondary': true, hidden: perPage >= totalCount }"
-        @click="loadMore"
-      >
-        <Icon icon="icons:load-more" /> <span class="ml-1">Load More</span>
-      </Button>
-    </section>
-
     <!-- Toast Container -->
     <section>
       <Toast />
@@ -179,8 +162,9 @@
       >
         <p class="text-center">
           If you would like to view a full-screen version of an image, simply
-          click the photo you'd like to view to open the applications <br>
-          <em class="text-blue-500"><strong>Gallery Mode</strong></em> feature.
+          click the photo you'd like to view to open <br />
+          <em class="text-blue-500"><strong>Gallery Mode</strong></em
+          >.
         </p>
         <template #footer>
           <Button
@@ -284,12 +268,6 @@ const folders = ref([
 // folder
 const totalCount = ref(0)
 
-// Set initial offset to `0`
-const offset = ref(0)
-
-// Set initial per page value to `6`
-const perPage = ref(6)
-
 // Order by `name`
 const orderBy = ref('name')
 
@@ -331,16 +309,6 @@ const parseFileUrl = (photo) =>
 const parseFilename = (photo) => removeExtension(photo.name)
 
 /**
- * Initialize upon dropdown change
- *
- * @returns {void}
- */
-const initDropdown = () => {
-  perPage.value = 6
-  getPhotos()
-}
-
-/**
  * Get the photos from the supabase API
  *
  * @return {Promise<void>}
@@ -354,10 +322,6 @@ const getPhotos = async () => {
     // List all photos in the folder that is
     // determined by the dropdown option
     .list(folder.value, {
-      // Use the dropdown values to determine
-      // the offset, limit and order
-      limit: perPage.value,
-      offset: offset.value,
       sortBy: {
         column: orderBy.value,
         order: orderType.value,
@@ -413,17 +377,6 @@ const getTotalCount = async () => {
     .then((response) => {
       totalCount.value = response.data.length
     })
-}
-
-/**
- * Load more photos and move 'up' within the
- * viewport
- *
- * @returns {void}
- */
-const loadMore = () => {
-  perPage.value = perPage.value + 6
-  getPhotos()
 }
 
 /**

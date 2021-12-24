@@ -4,9 +4,7 @@
       <div dir="ltr">
         <div class="text-center">
           <Message severity="info" :closable="false" class="text-justify">
-            In regards to any photos, videos or other multimedia content that
-            can be found on this application, Instagram or any other medium: the
-            following terms
+            In regards to any multimedia content that the following terms
             <strong><em>must</em></strong> be met.
           </Message>
           <Divider align="left">

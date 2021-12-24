@@ -7,8 +7,7 @@
         class="text-justify"
       >
         Please use the following form to contact me regarding quotes or general
-        inquiries. I will try my best to answer each correspondence in a timely
-        fashion.
+        inquiries.
       </Message>
       <Message
         v-if="isSuccess"

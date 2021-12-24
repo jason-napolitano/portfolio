@@ -5,9 +5,7 @@
         <AppNavbar />
       </div>
     </header>
-    <section
-      class="border-round-bottom border-round-top bg-white shadow-1"
-    >
+    <section class="border-round-bottom border-round-top bg-white shadow-1">
       <div class="p-3">
         <router-view />
       </div>
