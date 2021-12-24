@@ -55,10 +55,10 @@
     <div class="p-field my-4 p-col-12">
       <label for="phone">Phone Number</label>
       <InputMask
-        placeholder="(999) 999-9999"
-        mask="(999) 999-9999"
+        :placeholder="mask"
         inputId="phone"
         v-model="phone"
+        :mask="mask"
         name="phone"
         required
       />
@@ -114,6 +114,9 @@ const isSuccess = ref(null)
 // Was there an error?
 const isError = ref(null)
 
+// input mask placeholder/mask value
+const mask = '(555) 555-5555'
+
 /* --------------------------------------------------------------------------
  * Contact form references
  * ----------------------------------------------------------------------- */
@@ -168,16 +171,15 @@ const sendEmail = () => {
       email.value = ''
       name.value = ''
     })
-    // And scroll to the top of the viewport
+    // Scroll to the top of the viewport
     .then(() => {
       scrollTo()
     })
     // Set the successMessage value
     .then(() => {
       successMessage.value = `
-          Your email was sent successfully. Please give me time to review your
-          inquiry and I will contact you as soon as I am able to do so. I thank you
-          for your patience.
+          Your correspondence was sent successfully. I will contact you as
+          soon as possible.
         `
     })
     // Reset the isSuccess message
@@ -193,12 +195,7 @@ const sendEmail = () => {
       // Scroll to the top of the viewport
       scrollTo()
       // Set the errorMessage value
-      errorMessage.value =
-        error.message ??
-        `
-          There was an error while sending yor message. Please try again later or contact me directly at
-          jnapolitanoit@gmail.com.
-        `
+      errorMessage.value = error.message
       // Reset the isError message
       setTimeout(() => {
         isError.value = false

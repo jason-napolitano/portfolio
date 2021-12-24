@@ -82,10 +82,14 @@ export const thousandsSeparator = (number) => {
 }
 
 /**
- * A wrapper for window.scrollTo()
+ * A promise-based wrapper for window.scrollTo()
  *
- * @returns {void}
+ * @returns {Promise<any>}
  */
 export const scrollTo = (x = 0, y = 0) => {
-  window.scrollTo(x, y)
+  return new Promise((resolve) => {
+    resolve(() => {
+      window.scrollTo(x, y)
+    })
+  })
 }

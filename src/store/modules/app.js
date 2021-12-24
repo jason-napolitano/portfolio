@@ -1,6 +1,5 @@
 /* library imports */
 import { env, pkgJSON } from '../../utils'
-import { supabase } from '../../utils/supabase'
 
 /* vuex module */
 export const appStore = {
@@ -9,7 +8,6 @@ export const appStore = {
     appVersion: pkgJSON('version'),
     appAuthor: pkgJSON('author'),
     appTitle: env('META_TITLE'),
-    isLoggedIn: supabase.auth.user(),
   },
 
   // mutations ----------------------------------
@@ -55,6 +53,5 @@ export const appStore = {
       const date = new Date()
       return date.getFullYear()
     },
-    isLoggedIn: (state) => state.isLoggedIn,
   },
 }

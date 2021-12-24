@@ -36,7 +36,7 @@
     </section>
 
     <!-- Display photo counter -->
-    <section class="col-12">
+    <section v-if="!isLoading" class="col-12">
       <Divider align="center" type="dashed">
         Showing {{ totalCount }} photos
       </Divider>
@@ -49,8 +49,14 @@
         <!-- Loading message -->
         <template #message>
           <div>
-            The images are currently loading. It shouldn't take too long to grab
-            the the photos from the API.
+            The images are currently loading. This process shouldn't take too
+            long. <br />
+            If this loading state persists, please
+            <router-link
+              class="text-blue-700 no-underline"
+              :to="{ name: 'contact-view' }"
+              >let me know</router-link
+            >.
           </div>
         </template>
       </Loading>
@@ -60,7 +66,7 @@
     <section class="col-12" v-if="!isLoading && photos.length < 1">
       <!-- No media message -->
       <div
-        class="p-5 border-gray-300 border-1 border-round text-gray-700 bg-gray-50 text-center"
+        class="text-center"
       >
         There is currently no media to load. Either this gallery contains no
         media, the gallery does not exist or an incorrect gallery has been
@@ -323,10 +329,6 @@ const getPhotos = async () => {
     // Assign the response data
     .then((response) => {
       photos.value = response.data
-    })
-    // Set the `isLoading` state to true
-    .then(() => {
-      isLoading.value = true
     })
     // Assign the total count value
     .then(() => {

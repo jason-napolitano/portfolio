@@ -42,8 +42,7 @@ defineProps({
     type: String,
     default: 'wheel',
     required: false,
-    validator: (value) =>
-      ['squares', 'pie', 'wheel', 'bars', 'pulse'].includes(value),
+    validator: (value) => ['wheel', 'bars'].includes(value),
   },
   // How do we want to align the
   // message body text?
