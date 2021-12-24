@@ -260,7 +260,7 @@ const openHelpModal = () => {
 }
 
 /**
- * Opens the help modal
+ * Closes the help modal
  *
  * @returns {void}
  */
