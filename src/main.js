@@ -35,8 +35,8 @@ router.beforeEach(function (to, from, next) {
     })
     // Then we call the next() function and continue onward!
     .then(() => {
-    next()
-  })
+      next()
+    })
 })
 
 /* -----------------------------------------------------------------------------
