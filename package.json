@@ -1,6 +1,7 @@
 {
   "name": "primevue-quickstart",
-  "version": "2.1.1",
+  "author": "Jason Napolitano",
+  "version": "2.1.2",
   "license": "MIT",
   "scripts": {
     "serve:prod": "yarn build && cd ./dist && serve",
