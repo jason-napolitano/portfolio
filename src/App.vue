@@ -1,11 +1,11 @@
 <template>
   <main ref="container" class="container">
-    <header class="grid my-1">
+    <header class="grid mb-1">
       <div class="col-12">
         <AppNavbar />
       </div>
     </header>
-    <section class="border-round-bottom border-round-top bg-white shadow-1">
+    <section class="border-round bg-white content-container">
       <div class="p-3">
         <router-view />
       </div>
@@ -44,3 +44,9 @@ onMounted(() => {
   window.ondragstart = () => false
 })
 </script>
+
+<style>
+.content-container {
+  border: 1px solid #e1e1e1;
+}
+</style>

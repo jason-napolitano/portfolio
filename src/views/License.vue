@@ -4,7 +4,7 @@
       <div dir="ltr">
         <div class="text-center">
           <Message severity="info" :closable="false" class="text-justify">
-            In regards to any multimedia content that the following terms
+            In regards to any multimedia content, the following terms
             <strong><em>must</em></strong> be met.
           </Message>
           <Divider align="left">

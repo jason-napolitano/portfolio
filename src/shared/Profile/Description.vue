@@ -21,14 +21,9 @@
     </p>
 
     <p>
-      I truly do hope that anyone viewing these photos here or on
-      <em
-        class="text-blue-600 no-underline cursor-pointer"
-        @click="openInstagramLink"
-        >Instagram</em
-      >
-      can find some tranquility through my lens, as I have come to do. There is
-      a certain peace within nature and capturing it, that I believe we can all
+      I truly do hope that anyone viewing these photos here or on Instagram can
+      find some tranquility through my lens, as I have come to do. There is a
+      certain peace within nature and capturing it, that I believe we can all
       come to appreciate in time.
     </p>
 
@@ -66,19 +61,6 @@
  * Component imports
  * ----------------------------------------------------------------------- */
 import Divider from 'primevue/divider'
-
-/* --------------------------------------------------------------------------
- * Component methods
- * ----------------------------------------------------------------------- */
-
-/**
- * Opens the instagram link
- *
- * @returns {void}
- */
-const openInstagramLink = () => {
-  window.open('https://instagram.com/napolitano.photos', '_blank')
-}
 </script>
 
 <style scoped>

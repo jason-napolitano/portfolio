@@ -1,5 +1,5 @@
 <template>
-  <Menubar :model="items">
+  <Menubar class="menu-bar" :model="items">
     <template #end>
       <HeaderLogo />
     </template>
@@ -80,3 +80,10 @@ const openInstagramPage = () => {
   })
 }
 </script>
+
+<style scoped>
+.menu-bar {
+  border-radius: 0 0 0.25rem 0.25rem !important;
+  margin-top: -0.25rem;
+}
+</style>

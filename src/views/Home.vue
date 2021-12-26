@@ -5,7 +5,7 @@
     <section class="col-12">
       <!-- Folder name dropdown -->
       <div
-        class="bg-gray-100 p-2 border-1 border-gray-300 border-round-bottom border-round-top"
+        class="bg-gray-50 p-2 border-1 border-gray-300 border-round-bottom border-round-top"
       >
         <div class="flex">
           <div class="flex-none flex align-items-center justify-content-center">
@@ -65,9 +65,7 @@
     <!-- Display if query is not in loading state but there are no photos to display -->
     <section class="col-12" v-if="!isLoading && photos.length < 1">
       <!-- No media message -->
-      <div
-        class="text-center"
-      >
+      <div class="text-center">
         There is currently no media to load. Either this gallery contains no
         media, the gallery does not exist or an incorrect gallery has been
         selected. If this error persists, please
@@ -89,7 +87,7 @@
         :showItemNavigators="true"
         :showThumbnails="false"
         :fullScreen="true"
-        :circular="true"
+        :circular="false"
         :value="photos"
       >
         <!-- Fullscreen image -->
@@ -98,14 +96,6 @@
             :alt="removeExtension(slotProps.item.name)"
             :src="parseFileUrl(slotProps.item)"
             class="w-auto fs-image"
-          />
-        </template>
-        <!-- Thumbnail image (when applicable)-->
-        <template #thumbnail="slotProps">
-          <img
-            :alt="removeExtension(slotProps.item.name)"
-            :src="parseFileUrl(slotProps.item)"
-            style="display: block"
           />
         </template>
       </Galleria>
@@ -119,18 +109,9 @@
         >
           <!-- Display the individual image ... -->
           <div class="photo-item">
-            <!--
-            <div
-              class="border-round-top bg-gray-900 text-gray-100 p-2 text-center"
-            >
-              <div class="name">
-                {{ parseFilename(image) }}
-              </div>
-            </div>
-             -->
             <!-- Using the image component ... -->
             <ElImage
-              class="border-round cursor-pointer sm:h-20rem md:h-15rem w-full"
+              class="border-round cursor-pointer sm:h-12rem md:h-15rem w-full"
               :alt="removeExtension(image.name)"
               @click="imageClick(index)"
               :src="parseFileUrl(image)"
@@ -162,27 +143,37 @@
     <!-- Dialog modal container -->
     <section>
       <Dialog
-        :style="{ 'max-width': '78vw' }"
+        :style="{ 'max-width': '90vw' }"
         v-model:visible="displayDialog"
         :close-on-escape="true"
+        :show-header="false"
         :closable="false"
         position="top"
         :modal="true"
+        class="mt-0"
       >
         <p class="text-center">
-          If you would like to view a full-screen version of an image, simply
-          click the photo you'd like to view to open <br />
-          <em class="text-blue-500"><strong>Gallery Mode</strong></em
-          >.
+          If you'd like to activate
+          <span class="text-blue-400 font-bold">Gallery Mode</span>
+          for an image, you can do so simply by
+          <span class="d-none d-sm-none d-md-inline d-lg-inline d-xl-inline"
+            >clicking</span
+          >
+          <span class="d-md-none d-lg-none d-xl-none">tapping</span>
+          it!
+        </p>
+        <p
+          class="text-center text-gray-700 font-light d-md-none d-lg-none d-xl-none"
+        >
+          (Landscape orientation is recommended)
         </p>
         <template #footer>
-          <Button
-            class="p-button-danger w-full"
+          <div
+            class="text-center bg-pomegranate cursor-pointer border-round text-white p-2 w-full"
             @click="closeHelpModal"
-            icon="pi pi-fw-pi-times"
           >
-            <span class="text-center">Close Window</span>
-          </Button>
+            Close Window
+          </div>
         </template>
       </Dialog>
     </section>
