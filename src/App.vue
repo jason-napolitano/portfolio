@@ -61,7 +61,13 @@ import Dialog from 'primevue/dialog'
  * ----------------------------------------------------------------------- */
 import { onMounted, ref } from 'vue'
 import { checkAdBlocker } from './utils'
+
+/* --------------------------------------------------------------------------
+ * Reference variables
+ * ----------------------------------------------------------------------- */
+// Is a ad-blocker detected?
 const adBlockerDetected = ref(false)
+// Show AdBlock dialog window?
 const showAdBlockDialog = ref(false)
 
 /* --------------------------------------------------------------------------
@@ -72,11 +78,11 @@ onMounted(async () => {
   window.addEventListener(`contextmenu`, (e) => e.preventDefault())
   // Disable dragging of elements
   window.ondragstart = () => false
-
-  // Detect ad blocker
+  // Detect ad-blocker
   adBlockerDetected.value = await checkAdBlocker()
-
+  // If an ad-blocker is detected ...
   if (adBlockerDetected.value) {
+    // Show the ad-block dialog window
     showAdBlockDialog.value = true
   }
 })
