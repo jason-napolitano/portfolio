@@ -38,7 +38,7 @@
     <!-- Display photo counter -->
     <section v-if="!isLoading" class="col-12">
       <Divider align="center" type="dashed">
-        Showing {{ totalCount }} photos
+        Showing {{ thousandsSeparator(totalCount) }} photos
       </Divider>
     </section>
 
@@ -195,9 +195,9 @@ import Toast from 'primevue/toast'
 /* --------------------------------------------------------------------------
  * Library imports
  * ----------------------------------------------------------------------- */
+import { removeExtension, thousandsSeparator } from '../utils'
 import { supabase } from '../utils/supabase'
 import { useToast } from 'primevue/usetoast'
-import { removeExtension } from '../utils'
 import { ref, onMounted } from 'vue'
 
 /* --------------------------------------------------------------------------

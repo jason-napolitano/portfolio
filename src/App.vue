@@ -18,6 +18,31 @@
     <section>
       <ScrollTop />
     </section>
+    <!-- Ad blocker detection -->
+    <section>
+      <Dialog
+        :style="{ 'max-width': '90vw' }"
+        :visible="showAdBlockDialog"
+        :close-on-escape="true"
+        :show-header="false"
+        :closable="false"
+        position="top"
+        :modal="true"
+        class="mt-0"
+      >
+        <div class="text-center">
+          An add blocker was detected. Please note, that I do not advertise here
+          so you may disable it if it interferes with your experience.
+        </div>
+        <template #footer>
+          <Button
+            @click="showAdBlockDialog = false"
+            class="p-button-danger w-full"
+            label="Close Window"
+          />
+        </template>
+      </Dialog>
+    </section>
   </main>
 </template>
 
@@ -28,20 +53,32 @@
 import ScrollTop from 'primevue/scrolltop'
 import AppNavbar from './layout/Navbar'
 import AppFooter from './layout/Footer'
+import Button from 'primevue/button'
+import Dialog from 'primevue/dialog'
 
 /* --------------------------------------------------------------------------
  * Library imports
  * ----------------------------------------------------------------------- */
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
+import { checkAdBlocker } from './utils'
+const adBlockerDetected = ref(false)
+const showAdBlockDialog = ref(false)
 
 /* --------------------------------------------------------------------------
  * Component mounting
  * ----------------------------------------------------------------------- */
-onMounted(() => {
+onMounted(async () => {
   // Disable context menu
   window.addEventListener(`contextmenu`, (e) => e.preventDefault())
   // Disable dragging of elements
   window.ondragstart = () => false
+
+  // Detect ad blocker
+  adBlockerDetected.value = await checkAdBlocker()
+
+  if (adBlockerDetected.value) {
+    showAdBlockDialog.value = true
+  }
 })
 </script>
 

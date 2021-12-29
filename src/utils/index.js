@@ -2,14 +2,6 @@
 const packageJSON = require('../../package.json')
 
 /**
- * Returns the count of a collection, string, or an array
- *
- * @param data {string|any[]}
- * @returns {number}
- */
-export const count = (data) => data.length
-
-/**
  * Wrapper to access process.env
  *
  * @param value {string}
@@ -27,14 +19,6 @@ export const env = (value) =>
  * @returns {string}
  */
 export const pkgJSON = (value) => packageJSON[value]
-
-/**
- * Check if a function exists
- *
- * @param name
- * @returns {boolean}
- */
-export const functionExists = (name) => typeof name !== 'function'
 
 /**
  * Removes hyphens (EG: '-' )  from a string
@@ -92,4 +76,51 @@ export const scrollTo = (x = 0, y = 0) => {
       window.scrollTo(x, y)
     })
   })
+}
+
+/**
+ * Determines if the user is likely using an
+ * ad block extension
+ *
+ * @returns {Promise<boolean>}
+ */
+export async function checkAdBlocker() {
+  // Used to cache the result
+  let isBlocked
+
+  const tryRequest = async () => {
+    try {
+      return fetch(
+        // Check to see if adsbygoogle.js can be loaded
+        new Request(
+          'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js',
+          {
+            method: 'HEAD',
+            mode: 'no-cors',
+          }
+        )
+      )
+        .then(() => {
+          // adsbygoogle.js request succeeded, so likely
+          // there is no ad blocker
+          isBlocked = false
+          return isBlocked
+        })
+        .catch(() => {
+          // Request failed, likely due
+          // to an ad blocker
+          isBlocked = true
+          return isBlocked
+        })
+    } catch (error) {
+      // fetch API error; possible fetch not supported (old browser)
+      // Marking as a blocker since there was an error and so
+      // we can prevent continued requests when this function is run
+      console.log(error)
+      isBlocked = true
+      return isBlocked
+    }
+  }
+
+  return isBlocked !== undefined ? isBlocked : await tryRequest()
 }
