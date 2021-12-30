@@ -1,5 +1,4 @@
-/** On installation of the PWA
- * TODO - Ensure proper implementation
+/** On installation of the PWA */
 self.addEventListener('install', function (event) {
   event.waitUntil(
     caches.open('napolitano-photos-cache').then(function (cache) {
@@ -28,6 +27,7 @@ self.addEventListener('install', function (event) {
     })
   )
 })
+/** While fetching the PWA */
 self.addEventListener('fetch', function(event) {
   event.respondWith(
     caches.match(event.request).then(function(response) {
@@ -35,4 +35,3 @@ self.addEventListener('fetch', function(event) {
     })
   );
 });
-*/
