@@ -99,7 +99,29 @@ import emailjs from 'emailjs-com'
 import { ref } from 'vue'
 
 /* --------------------------------------------------------------------------
- * General component references
+ * Contact form references
+ * ----------------------------------------------------------------------- */
+
+// Description field
+const description = ref(null)
+
+// Phone number field
+const phone = ref(null)
+
+// Email field
+const email = ref(null)
+
+// input mask placeholder/mask value
+const mask = '(555) 555-5555'
+
+// Name field
+const name = ref(null)
+
+// Contact form reference
+const form = ref(null)
+
+/* --------------------------------------------------------------------------
+ * Send the email message
  * ----------------------------------------------------------------------- */
 
 // Success message
@@ -114,35 +136,9 @@ const isSuccess = ref(null)
 // Was there an error?
 const isError = ref(null)
 
-// input mask placeholder/mask value
-const mask = '(555) 555-5555'
-
-/* --------------------------------------------------------------------------
- * Contact form references
- * ----------------------------------------------------------------------- */
-
-// Description field
-const description = ref(null)
-
-// Phone number field
-const phone = ref(null)
-
-// Email field
-const email = ref(null)
-
-// Name field
-const name = ref(null)
-
-// Contact form reference
-const form = ref(null)
-
 // Timeout timer for errorMessage and
 // successMessage
 const timer = 7500
-
-/* --------------------------------------------------------------------------
- * Component methods
- * ----------------------------------------------------------------------- */
 
 /**
  * Send the email using EmailJS

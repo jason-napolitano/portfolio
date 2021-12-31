@@ -82,6 +82,7 @@ defineProps({
 })
 </script>
 
+<!-- Scoped CSS -->
 <style scoped>
 .loading-image {
   margin: 0 auto !important;

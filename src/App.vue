@@ -66,14 +66,6 @@ import { checkAdBlocker } from './utils'
 import { onMounted, ref } from 'vue'
 
 /* --------------------------------------------------------------------------
- * Reference variables
- * ----------------------------------------------------------------------- */
-// Is a ad-blocker detected?
-const adBlockerDetected = ref(false)
-// Show AdBlock dialog window?
-const showAdBlockDialog = ref(false)
-
-/* --------------------------------------------------------------------------
  * Component mounting
  * ----------------------------------------------------------------------- */
 onMounted(async () => {
@@ -83,6 +75,25 @@ onMounted(async () => {
   // Disable dragging of elements
   window.ondragstart = () => false
 
+  // Ad blocker detection
+  checkAdBlockerStatus()
+})
+
+/* --------------------------------------------------------------------------
+ * AdBlocker references
+ * ----------------------------------------------------------------------- */
+// Is a ad-blocker detected?
+const adBlockerDetected = ref(false)
+
+// Show AdBlock dialog window?
+const showAdBlockDialog = ref(false)
+
+/**
+ * Check the ad blocker status
+ *
+ * @returns {void}
+ */
+const checkAdBlockerStatus = async () => {
   // Detect ad-blocker
   adBlockerDetected.value = await checkAdBlocker()
 
@@ -91,9 +102,10 @@ onMounted(async () => {
     // Show the ad-block dialog window
     showAdBlockDialog.value = true
   }
-})
+}
 </script>
 
+<!-- App CSS -->
 <style>
 .content-container {
   border: 1px solid #e1e1e1;

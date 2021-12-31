@@ -21,11 +21,8 @@ import { useStore } from 'vuex'
 import { computed } from 'vue'
 
 /* --------------------------------------------------------------------------
- * Render variables & computed properties
+ * Computed properties
  * ----------------------------------------------------------------------- */
-
-// Confirmation dialog
-const confirm = useConfirm()
 
 // Vuex instance
 const store = useStore()
@@ -36,8 +33,11 @@ const footerCopyright = computed(
 )
 
 /* --------------------------------------------------------------------------
- * Component methods
+ * Confirmation dialog
  * ----------------------------------------------------------------------- */
+
+// PrimeVue API
+const confirm = useConfirm()
 
 /**
  * Open GitHub link

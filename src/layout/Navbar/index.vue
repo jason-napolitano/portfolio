@@ -22,11 +22,8 @@ import { useConfirm } from 'primevue/useconfirm'
 import { ref } from 'vue'
 
 /* --------------------------------------------------------------------------
- * General component references
+ * Main menu items
  * ----------------------------------------------------------------------- */
-
-// Confirmation dialog
-const confirm = useConfirm()
 
 // Menu items
 const items = ref([
@@ -60,8 +57,11 @@ const items = ref([
 ])
 
 /* --------------------------------------------------------------------------
- * Component methods
+ * Menu commands
  * ----------------------------------------------------------------------- */
+
+// Confirmation dialog
+const confirm = useConfirm()
 
 /**
  * Open instagram page
@@ -81,6 +81,7 @@ const openInstagramPage = () => {
 }
 </script>
 
+<!-- Scoped CSS -->
 <style scoped>
 .menu-bar {
   border-radius: 0 0 0.25rem 0.25rem !important;

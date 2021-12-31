@@ -44,15 +44,11 @@ import Button from 'primevue/button'
 import { useRouter } from 'vue-router'
 
 /* --------------------------------------------------------------------------
- * Component variables
+ * Go back functionality
  * ----------------------------------------------------------------------- */
 
 // Router instance
 const router = useRouter()
-
-/* --------------------------------------------------------------------------
- * Component methods
- * ----------------------------------------------------------------------- */
 
 /**
  * Go back to the previous location

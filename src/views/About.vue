@@ -79,7 +79,7 @@ import { useStore } from 'vuex'
 import { computed } from 'vue'
 
 /* --------------------------------------------------------------------------
- * Render variables
+ * Render variables and computed properties
  * ----------------------------------------------------------------------- */
 
 // Vuex store
@@ -96,6 +96,7 @@ const photoUrl =
   'https://zxrrepxdawawbgelqref.supabase.in/storage/v1/object/public/public/profile/profile_image.jpg'
 </script>
 
+<!-- Scoped CSS -->
 <style scoped>
 .quote-link:hover {
   cursor: pointer;

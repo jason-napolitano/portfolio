@@ -1,16 +1,23 @@
 <template>
   <div class="flex justify-content-start flex-wrap">
     <div class="flex align-items-center justify-content-center">
-      <span class="rock-salt">{{ appTitle }}</span>
+      <router-link
+        class="text-charcoal no-underline rock-salt"
+        :to="{ name: 'home-view' }"
+      >
+        {{ appTitle }}
+      </router-link>
     </div>
     <div class="flex align-items-center justify-content-center">
-      <img
-        src="../../assets/images/navbar-logo.svg"
-        width="30"
-        height="24"
-        :alt="appTitle"
-        class="ml-1"
-      />
+      <router-link :to="{ name: 'home-view' }">
+        <img
+          src="../../assets/images/navbar-logo.svg"
+          :alt="appTitle"
+          class="ml-1"
+          width="30"
+          height="24"
+        />
+      </router-link>
     </div>
   </div>
 </template>
@@ -23,7 +30,7 @@ import { useStore } from 'vuex'
 import { computed } from 'vue'
 
 /* --------------------------------------------------------------------------
- * Render variables & computed properties
+ * Computed properties
  * ----------------------------------------------------------------------- */
 
 // Vuex store instance
