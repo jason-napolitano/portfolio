@@ -68,7 +68,7 @@ export const thousandsSeparator = (number) => {
 /**
  * A promise-based wrapper for window.scrollTo()
  *
- * @returns {Promise<any>}
+ * @returns {Promise<void>}
  */
 export const scrollTo = (x = 0, y = 0) => {
   return new Promise((resolve) => {

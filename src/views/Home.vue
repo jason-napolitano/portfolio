@@ -27,8 +27,8 @@
           <div class="flex-none flex align-items-center justify-content-center">
             <Button
               icon="pi pi-info-circle"
-              @click="openHelpModal"
               class="p-button-info"
+              @click="changeHelpModalStatus"
             ></Button>
           </div>
         </div>
@@ -36,7 +36,7 @@
     </section>
 
     <!-- Display photo counter -->
-    <section v-if="!isLoading" class="col-12">
+    <section v-if="!isLoading && totalCount > 0" class="col-12">
       <Divider align="center" type="dashed">
         Showing {{ thousandsSeparator(totalCount) }} photos
       </Divider>
@@ -63,7 +63,7 @@
     </section>
 
     <!-- Display if query is not in loading state but there are no photos to display -->
-    <section class="col-12" v-if="!isLoading && photos.length < 1">
+    <section class="col-12" v-if="!isLoading && totalCount < 1">
       <!-- No media message -->
       <div class="text-center">
         There is currently no media to load. Either this gallery contains no
@@ -143,7 +143,7 @@
     <!-- Dialog modal container -->
     <section>
       <Dialog
-        :style="{ 'max-width': '90vw' }"
+        :style="{ 'max-width': '89vw' }"
         v-model:visible="displayDialog"
         :close-on-escape="true"
         :show-header="false"
@@ -153,24 +153,15 @@
         class="mt-0"
       >
         <p class="text-center">
-          If you'd like to activate
-          <span class="text-blue-400 font-bold">Gallery Mode</span>
-          for an image, you can do so simply by
-          <span class="d-none d-sm-none d-md-inline d-lg-inline d-xl-inline"
-            >clicking</span
-          >
-          <span class="d-md-none d-lg-none d-xl-none">tapping</span>
-          it!
+          You can enable <strong>Gallery Mode</strong> by opening any image
         </p>
-        <p
-          class="text-center text-gray-700 font-light d-md-none d-lg-none d-xl-none"
-        >
+        <p class="text-center text-gray-600 font-light">
           (Landscape orientation is recommended)
         </p>
         <template #footer>
           <div
             class="text-center bg-pomegranate cursor-pointer border-round text-white p-2 w-full"
-            @click="closeHelpModal"
+            @click="changeHelpModalStatus"
           >
             Close Window
           </div>
@@ -201,7 +192,7 @@ import { useToast } from 'primevue/usetoast'
 import { ref, onMounted } from 'vue'
 
 /* --------------------------------------------------------------------------
- * Component mounting configuration
+ * Component mounting
  * ----------------------------------------------------------------------- */
 
 /**
@@ -213,7 +204,7 @@ onMounted(() => {
 })
 
 /* --------------------------------------------------------------------------
- * Fullscreen gallery configuration
+ * Fullscreen gallery
  * ----------------------------------------------------------------------- */
 
 // Display the gallery component initially?
@@ -235,35 +226,29 @@ const imageClick = (index) => {
 }
 
 /* --------------------------------------------------------------------------
- * Dialog modal configuration
+ * Dialog modal
  * ----------------------------------------------------------------------- */
 
 // Display the dialog modal initially?
 const displayDialog = ref(false)
 
 /**
- * Opens the help modal
+ * Opens and closes the help modal
  *
  * @returns {void}
  */
-const openHelpModal = () => {
-  displayDialog.value = true
-}
-
-/**
- * Closes the help modal
- *
- * @returns {void}
- */
-const closeHelpModal = () => {
-  displayDialog.value = false
+const changeHelpModalStatus = () => {
+  displayDialog.value = !displayDialog.value
 }
 
 /* --------------------------------------------------------------------------
- * Supabase folder configuration
+ * Supabase folders
  * ----------------------------------------------------------------------- */
 
-// Default value
+// Default bucket
+const bucket = ref('public')
+
+// Default folder
 const folder = ref('nature')
 
 // Dropdown options
@@ -283,10 +268,10 @@ const folders = ref([
  * @returns {string}
  */
 const parseFileUrl = (item) =>
-  `https://zxrrepxdawawbgelqref.supabase.in/storage/v1/object/public/public/${folder.value}/${item.name}`
+  `https://zxrrepxdawawbgelqref.supabase.in/storage/v1/object/public/${bucket.value}/${folder.value}/${item.name}`
 
 /* --------------------------------------------------------------------------
- * Request/Response configuration
+ * Supabase request
  * ----------------------------------------------------------------------- */
 
 // Total of all photos in the selected folder
@@ -298,6 +283,9 @@ const isLoading = ref(true)
 // Photos array from the API
 const photos = ref([])
 
+// PrimeVue Toast API
+const toast = useToast()
+
 /**
  * Get the photos using the supabase API
  *
@@ -307,7 +295,7 @@ const getPhotos = async () => {
   // Let's try to retrieve all media
   await supabase.storage
     // Grab from the `public` bucket
-    .from('public')
+    .from(bucket.value)
     // List all photos in the folder that is
     // determined by the dropdown option
     .list(folder.value, {
@@ -329,12 +317,10 @@ const getPhotos = async () => {
     .then(() => {
       isLoading.value = false
     })
-    // Catch any errors that may appear
+    // Catch any errors that may occur
     .catch((error) => {
-      // PrimeVue Toast API
-      const toast = useToast()
-
-      // Display the toast with an error message
+      // Display a toast with an error
+      // message
       toast.add({
         severity: 'error',
         summary: 'Error Message',
@@ -345,6 +331,7 @@ const getPhotos = async () => {
 }
 </script>
 
+<!-- Scoped SCSS -->
 <style scoped lang="scss">
 // When an image is in fullscreen mode
 .fs-image {

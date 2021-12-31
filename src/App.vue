@@ -21,7 +21,7 @@
     <!-- Ad blocker detection -->
     <section>
       <Dialog
-        :style="{ 'max-width': '90vw' }"
+        :style="{ 'max-width': '85vw' }"
         :visible="showAdBlockDialog"
         :close-on-escape="true"
         :show-header="false"
@@ -30,10 +30,13 @@
         :modal="true"
         class="mt-0"
       >
-        <div class="text-center">
-          An add blocker was detected. Please note, that I do not advertise here
-          so you may disable it if it interferes with your experience.
-        </div>
+        <p class="text-center pt-3">
+          An AdBlocker was detected. Please note that I do not advertise on this
+          site.
+        </p>
+        <p class="text-center text-gray-600 font-light">
+          (Disabling it is appreciated)
+        </p>
         <template #footer>
           <Button
             @click="showAdBlockDialog = false"
@@ -59,8 +62,8 @@ import Dialog from 'primevue/dialog'
 /* --------------------------------------------------------------------------
  * Library imports
  * ----------------------------------------------------------------------- */
-import { onMounted, ref } from 'vue'
 import { checkAdBlocker } from './utils'
+import { onMounted, ref } from 'vue'
 
 /* --------------------------------------------------------------------------
  * Reference variables
@@ -76,10 +79,13 @@ const showAdBlockDialog = ref(false)
 onMounted(async () => {
   // Disable context menu
   window.addEventListener(`contextmenu`, (e) => e.preventDefault())
+
   // Disable dragging of elements
   window.ondragstart = () => false
+
   // Detect ad-blocker
   adBlockerDetected.value = await checkAdBlocker()
+
   // If an ad-blocker is detected ...
   if (adBlockerDetected.value) {
     // Show the ad-block dialog window
