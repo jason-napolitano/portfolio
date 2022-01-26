@@ -24,11 +24,22 @@
               v-model="folder"
             />
           </div>
-          <div class="flex-none flex align-items-center justify-content-center">
+          <div
+            class="flex-none flex align-items-center justify-content-center mr-1"
+          >
             <Button
               icon="pi pi-info-circle"
               class="p-button-info"
               @click="changeHelpModalStatus"
+            ></Button>
+          </div>
+          <div
+            class="flex-none flex align-items-center justify-content-center ml-1"
+          >
+            <Button
+              icon="pi pi-refresh"
+              class="p-button bg-charcoal"
+              @click="refreshAll"
             ></Button>
           </div>
         </div>
@@ -49,9 +60,8 @@
         <!-- Loading message -->
         <template #message>
           <div>
-            The images are currently loading. This process shouldn't take too
-            long. <br />
-            If this loading state persists, please
+            The gallery is currently loading. This process shouldn't take too
+            long. If this loading state persists, please
             <router-link
               class="text-blue-700 no-underline"
               :to="{ name: 'contact-view' }"
@@ -175,6 +185,7 @@
 /* --------------------------------------------------------------------------
  * Component imports
  * ----------------------------------------------------------------------- */
+import { ElImage } from 'element-plus'
 import Galleria from 'primevue/galleria'
 import Dropdown from 'primevue/dropdown'
 import Loading from '../shared/Loading'
@@ -186,10 +197,15 @@ import Toast from 'primevue/toast'
 /* --------------------------------------------------------------------------
  * Library imports
  * ----------------------------------------------------------------------- */
-import { removeExtension, thousandsSeparator } from '../utils'
-import { supabase } from '../utils/supabase'
+import { removeExtension, thousandsSeparator } from '@/utils'
+import { supabase } from '@/utils/supabase'
 import { useToast } from 'primevue/usetoast'
 import { ref, onMounted } from 'vue'
+
+/* --------------------------------------------------------------------------
+ * Stylesheet imports
+ * ----------------------------------------------------------------------- */
+import 'element-plus/es/components/image/style/css'
 
 /* --------------------------------------------------------------------------
  * Component mounting
@@ -217,7 +233,6 @@ const activeIndex = ref(0)
  * Activate when clicking on an image
  *
  * @param index {number}
- *
  * @returns {void}
  */
 const imageClick = (index) => {
@@ -245,11 +260,14 @@ const changeHelpModalStatus = () => {
  * Supabase folders
  * ----------------------------------------------------------------------- */
 
-// Default bucket
-const bucket = ref('public')
+// Original folder to load
+const originalFolder = 'nature'
 
 // Default folder
-const folder = ref('nature')
+const folder = ref(originalFolder)
+
+// Default bucket
+const bucket = ref('public')
 
 // Dropdown options
 const folders = ref([
@@ -301,8 +319,8 @@ const getPhotos = async () => {
     .list(folder.value, {
       // Sort the results by ...
       sortBy: {
-        column: 'name',
-        order: 'asc',
+        column: 'created_at',
+        order: 'desc',
       },
     })
     // Assign the response data
@@ -328,6 +346,16 @@ const getPhotos = async () => {
         life: 5500,
       })
     })
+}
+
+/**
+ * Refresh the photo gallery
+ *
+ * @returns {Promise<void>}
+ */
+const refreshAll = async () => {
+  folder.value = originalFolder
+  await getPhotos()
 }
 </script>
 

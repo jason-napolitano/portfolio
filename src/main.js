@@ -40,13 +40,6 @@ router.beforeEach(function (to, from, next) {
 })
 
 /* -----------------------------------------------------------------------------
- * element-plus library
- * -------------------------------------------------------------------------- */
-import ElementPlus from 'element-plus'
-import 'element-plus/dist/index.css'
-app.use(ElementPlus)
-
-/* -----------------------------------------------------------------------------
  * primevue css, components, et al
  * -------------------------------------------------------------------------- */
 import ConfirmationService from 'primevue/confirmationservice'

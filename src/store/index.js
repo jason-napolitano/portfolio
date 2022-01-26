@@ -1,6 +1,6 @@
 /* library imports */
 import createPersistedState from 'vuex-persistedstate'
-import { env, pkgJSON } from '../utils'
+import { env, pkgJSON } from '@/utils'
 import { createStore } from 'vuex'
 
 /** store instance */

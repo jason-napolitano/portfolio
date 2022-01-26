@@ -52,7 +52,7 @@
         required
       />
     </div>
-    <div class="p-field my-4 p-col-12">
+    <!-- div class="p-field my-4 p-col-12">
       <label for="phone">Phone Number</label>
       <InputMask
         :placeholder="mask"
@@ -62,7 +62,7 @@
         name="phone"
         required
       />
-    </div>
+    </div -->
     <div class="p-field my-4 p-col-12">
       <label for="city">Inquiry Description</label>
       <Textarea
@@ -86,15 +86,15 @@
 /* --------------------------------------------------------------------------
  * Component imports
  * ----------------------------------------------------------------------- */
+// import InputMask from 'primevue/inputmask'
 import InputText from 'primevue/inputtext'
-import InputMask from 'primevue/inputmask'
 import Textarea from 'primevue/textarea'
 import Message from 'primevue/message'
 
 /* --------------------------------------------------------------------------
  * Library imports
  * ----------------------------------------------------------------------- */
-import { env, scrollTo } from '../utils'
+import { env, scrollTo } from '@/utils'
 import emailjs from 'emailjs-com'
 import { ref } from 'vue'
 
@@ -112,7 +112,7 @@ const phone = ref(null)
 const email = ref(null)
 
 // input mask placeholder/mask value
-const mask = '(555) 555-5555'
+// const mask = '(555) 555-5555'
 
 // Name field
 const name = ref(null)
@@ -169,15 +169,14 @@ const sendEmail = () => {
     })
     // Scroll to the top of the viewport
     .then(() => {
-      scrollTo()
+      window.scrollTo(0, 0)
     })
-    // Set the successMessage value
-    .then(() => {
-      successMessage.value = `
+      .then(() => {
+        successMessage.value = `
           Your correspondence was sent successfully. I will contact you as
           soon as possible.
         `
-    })
+      })
     // Reset the isSuccess message
     .then(() => {
       setTimeout(() => {

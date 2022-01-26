@@ -1,9 +1,9 @@
 /* Component imports */
-import LicenseView from '../views/License'
-import ContactView from '../views/Contact'
-import NotFound from '../views/NotFound'
-import AboutView from '../views/About'
-import HomeView from '../views/Home'
+import LicenseView from '@/views/License'
+import ContactView from '@/views/Contact'
+import NotFound from '@/views/NotFound'
+import AboutView from '@/views/About'
+import HomeView from '@/views/Home'
 
 /* Routes array */
 const routes = [

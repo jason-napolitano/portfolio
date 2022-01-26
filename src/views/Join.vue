@@ -80,7 +80,7 @@ import Toast from 'primevue/toast'
 /* --------------------------------------------------------------------------
  * Library imports
  * ----------------------------------------------------------------------- */
-import { supabase } from '../utils/supabase'
+import { supabase } from '@/utils/supabase'
 import { useRouter } from 'vue-router'
 import { computed, ref } from 'vue'
 

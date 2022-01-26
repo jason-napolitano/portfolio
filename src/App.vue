@@ -18,7 +18,7 @@
     <section>
       <ScrollTop />
     </section>
-    <!-- Ad blocker detection -->
+    <!-- Ad blocker detection
     <section>
       <Dialog
         :style="{ 'max-width': '85vw' }"
@@ -46,6 +46,7 @@
         </template>
       </Dialog>
     </section>
+    -->
   </main>
 </template>
 
@@ -56,8 +57,8 @@
 import ScrollTop from 'primevue/scrolltop'
 import AppNavbar from './layout/Navbar'
 import AppFooter from './layout/Footer'
-import Button from 'primevue/button'
-import Dialog from 'primevue/dialog'
+//import Button from 'primevue/button'
+//import Dialog from 'primevue/dialog'
 
 /* --------------------------------------------------------------------------
  * Library imports
