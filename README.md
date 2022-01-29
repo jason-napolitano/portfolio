@@ -1,6 +1,8 @@
 # Personal Portfolio
 
 > Source code for [Napolitano's Photos](http://napolitano.photos)
+> 
+> Built using my [vue-starter](https://github.com/jason-napolitano/vue-starter) toolkit
 
 # License
 
