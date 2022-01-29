@@ -2,7 +2,7 @@
   "name": "napolitanos-photos",
   "author": "Jason Napolitano",
   "description": "PWA for www.napolitano.photos",
-  "version": "2.3.1",
+  "version": "2.3.2",
   "license": "MIT",
   "scripts": {
     "serve": "vue-cli-service serve --port 8728",

@@ -9,7 +9,6 @@
       <small class="pi pi-fw pi-github"></small>
     </li>
   </ul>
-  <ConfirmDialog :closable="false" />
 </template>
 
 <script setup>

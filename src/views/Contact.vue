@@ -171,12 +171,12 @@ const sendEmail = () => {
     .then(() => {
       window.scrollTo(0, 0)
     })
-      .then(() => {
-        successMessage.value = `
+    .then(() => {
+      successMessage.value = `
           Your correspondence was sent successfully. I will contact you as
           soon as possible.
         `
-      })
+    })
     // Reset the isSuccess message
     .then(() => {
       setTimeout(() => {
