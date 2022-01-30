@@ -29,7 +29,7 @@
           >
             <Button
               icon="pi pi-info-circle"
-              class="p-button-info"
+              class="p-button-primary"
               @click="changeHelpModalStatus"
             ></Button>
           </div>
@@ -38,7 +38,7 @@
           >
             <Button
               icon="pi pi-refresh"
-              class="p-button bg-charcoal"
+              class="p-button p-button-secondary"
               @click="refreshAll"
             ></Button>
           </div>
@@ -276,6 +276,7 @@ const folders = ref([
   { name: 'Animals & Livestock', value: 'animals' },
   { name: 'Nature & Outdoors', value: 'nature' },
   { name: 'Macro Style Photos', value: 'macro' },
+  { name: `Toys & Tiny Things`, value: 'toys' },
   { name: 'Miscellaneous', value: 'misc' },
 ])
 

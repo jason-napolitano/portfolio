@@ -9,12 +9,14 @@
       <small class="pi pi-fw pi-github"></small>
     </li>
   </ul>
+  <ConfirmDialog :closable="false" />
 </template>
 
 <script setup>
 /* --------------------------------------------------------------------------
  * Library imports
  * ----------------------------------------------------------------------- */
+import ConfirmDialog from 'primevue/confirmdialog'
 import { useConfirm } from 'primevue/useconfirm'
 import { useStore } from 'vuex'
 import { computed } from 'vue'

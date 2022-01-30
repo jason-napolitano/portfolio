@@ -4,12 +4,14 @@
       <HeaderLogo />
     </template>
   </Menubar>
+  <ConfirmDialog :closable="false" />
 </template>
 
 <script setup>
 /* --------------------------------------------------------------------------
  * Component imports
  * ----------------------------------------------------------------------- */
+import ConfirmDialog from 'primevue/confirmdialog'
 import Menubar from 'primevue/menubar'
 import HeaderLogo from './logo'
 
