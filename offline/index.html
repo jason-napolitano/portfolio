@@ -3,29 +3,57 @@
   <head>
     <meta charset="UTF-8" />
     <title>PWA Update in Progress</title>
-    <link rel="stylesheet" href="./assets/bootstrap.min.css" />
-    <link rel="stylesheet" href="./assets/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.1/css/bootstrap.min.css" />
+    <style>
+        html,
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background-color: #fffaf7;
+            margin-top: 0 !important;
+            color: #2c3e50;
+        }
+        .container {
+            border-top: 0 !important;
+            border: 1px solid #e1e1e1;
+            background-color: #FFF;
+            padding-bottom: 2rem;
+        }
+    </style>
   </head>
   <body>
   <main class="container">
       <section class="row">
           <div class="col">
-              <div class="text-center">
-                  <img src="./assets/wheel.svg" alt="Loading" />
-              </div>
+              <div class="pt-4">
+                <h1 class="text-center lead">- The PWA is being updated -</h1>
+                <p class="text-center lead">
+                    The update process could already be complete. Try refreshing this page to see the
+                    changes.
+                </p>
+            </div>
           </div>
       </section>
       <section class="row">
           <div class="col">
-
-              <h1 class="text-center lead">- The PWA is being updated -</h1>
-
-              <p class="text-center lead">
-                  The update process could already be complete. Try refreshing this page to see the
-                  changes.
-              </p>
+              <hr>
           </div>
       </section>
-  </main>
+      <section class="row">
+          <div class="col">
+              <div class="text-center">
+                  <button class="btn btn-primary" onclick="reload()">
+                      <span class="fa fa-refresh fa-fw"></span> Reload Page
+                    </button>
+              </div>
+          </div>
+      </section>
+    </main>
+    <script>
+        const reload = () => {
+            location.reload()
+        }
+    </script>
   </body>
 </html>
